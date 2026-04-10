@@ -1,0 +1,10 @@
+run = "npm run dev"
+hidden = [".config"]
+modules = ["nodejs-20:v28-2024-02-14-d51725b"]
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "npm run build && npm run preview"]
+deploymentTarget = "cloudrun"
