@@ -15,15 +15,18 @@ const queryClient = new QueryClient({
   },
 })
 
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!clerkPubKey) {
-  console.warn('Clerk Publishable Key not found. Add it to your environment variables.')
-}
+const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={clerkPubKey || ''}>
+    <ClerkProvider 
+      publishableKey={clerkKey}
+      appearance={{
+        elements: {
+          rootBox: 'mx-auto'
+        }
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <App />
         <Toaster 

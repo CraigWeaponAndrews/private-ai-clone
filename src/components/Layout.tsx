@@ -17,6 +17,7 @@ import {
   Command
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { hasValidClerkKey, demoUser } from '../App'
 
 const sidebarItems = [
   { icon: Home, label: 'Dashboard', path: '/dashboard', badge: null },
@@ -29,14 +30,27 @@ const sidebarItems = [
 ]
 
 export function Layout() {
-  const { user } = useUser()
-  const { signOut } = useClerk()
   const navigate = useNavigate()
   const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [notifications] = useState(3)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [currentTime, setCurrentTime] = useState(new Date())
+  
+  // Get user from Clerk or use demo user
+  let user = demoUser
+  let signOut = () => Promise.resolve()
+  
+  if (hasValidClerkKey) {
+    try {
+      const clerkUser = useUser()
+      const clerk = useClerk()
+      if (clerkUser.user) user = clerkUser.user as any
+      signOut = clerk.signOut
+    } catch (e) {
+      console.warn('Clerk not available, using demo user')
+    }
+  }
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
